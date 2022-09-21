@@ -1,15 +1,13 @@
 #pragma once
 
-class Fan {
-    int rpm = 0;
-
-public:
-    Fan();
-    Fan(const Fan&);
-    Fan(Fan&&);
-
+class Fan
+{
+  public:
     void setSpeed(int newRpm);
     int getSpeed();
     bool disable();
     bool enable();
+
+  private:
+    int rpm_ = 0;
 };
