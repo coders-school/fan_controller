@@ -1,12 +1,14 @@
 #pragma once
 
-class Fan
+#include "IFan.hpp"
+
+class Fan : public IFan
 {
   public:
-    void setSpeed(int newRpm);
-    int getSpeed() const;
-    bool disable();
-    bool enable();
+    void setSpeed(int newRpm) override;
+    int getSpeed() const override;
+    bool disable() override;
+    bool enable() override;
 
   private:
     static constexpr double lowerRpmLimit = 1000;
