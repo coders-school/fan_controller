@@ -9,8 +9,8 @@ int main()
 try {
     SlowThermometer t;
     Fan f;
-    double targetTemperature = 36.6;
-    double tolerance = .5;
+    const double targetTemperature = 36.6;
+    const double tolerance = .5;
     Controller oldController{t, f, targetTemperature, tolerance, nullptr};
     oldController.updateRpm();
     oldController.displayInfo();

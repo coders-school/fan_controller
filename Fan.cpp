@@ -5,7 +5,7 @@
 
 void Fan::setSpeed(int newRpm)
 {
-    if ((newRpm < 1000 and newRpm != 0) or newRpm > 3000) {
+    if ((newRpm < lowerRpmLimit and newRpm != 0) or newRpm > higherRpmLimit) {
         throw std::invalid_argument("Invalid speed");
     }
     auto difference = std::abs(newRpm - rpm_);
@@ -19,7 +19,7 @@ void Fan::setSpeed(int newRpm)
     }
 }
 
-int Fan::getSpeed()
+int Fan::getSpeed() const
 {
     return rpm_;
 }
