@@ -1,12 +1,16 @@
 #include "Controller.hpp"
 
-Controller::Controller(SlowThermometer,
-                       Fan,
+#include "IThermometer.hpp"
+
+Controller::Controller(const IThermometer& thermometer,
+                       Fan fan,
                        double,
                        double,
-                       std::shared_ptr<LcdDisplay>)
-{}
+                       std::shared_ptr<LcdDisplay> display)
+{ }
 
-void Controller::updateRpm() {}
+void Controller::updateRpm()
+{ }
 
-void Controller::displayInfo() {}
+void Controller::displayInfo()
+{ }
