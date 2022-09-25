@@ -1,7 +1,4 @@
 // TODO: VERIFY
-//  #include "external/catch.hpp"
-//  #include "external/hippomocks.h"
-//  #include "Controller.hpp"
 #include "Controller.hpp"
 #include "FanMock.hpp"
 #include "ThermometerMock.hpp"
@@ -19,34 +16,35 @@ using testing::ValuesIn;
 constexpr double TARGET_TEMPERATURE = 36.6;
 constexpr double TOLERANCE = 0.5;
 
-class ForTemperatureValuesWithinToleranceRange : public TestWithParam<double>
+class SutWithDependantMocks
 {
-  public:
-    ForTemperatureValuesWithinToleranceRange()
+  protected:
+    SutWithDependantMocks()
         : thermometer_(std::make_unique<NiceMock<ThermometerMock>>())
         , fan_(std::make_unique<NiceMock<FanMock>>())
         , sut_(*thermometer_, *fan_, TARGET_TEMPERATURE, TOLERANCE)
     { }
-
-  protected:
     std::unique_ptr<ThermometerMock> thermometer_;
     std::unique_ptr<FanMock> fan_;
     Controller sut_;
 };
 
-class ForTemperatureValuesBelowToleranceRange : public TestWithParam<double>
+class ForTemperatureValuesWithinToleranceRange : public TestWithParam<double>,
+                                                 public SutWithDependantMocks
+{
+  public:
+    ForTemperatureValuesWithinToleranceRange()
+        : SutWithDependantMocks()
+    { }
+};
+
+class ForTemperatureValuesBelowToleranceRange : public TestWithParam<double>,
+                                                public SutWithDependantMocks
 {
   public:
     ForTemperatureValuesBelowToleranceRange()
-        : thermometer_(std::make_unique<NiceMock<ThermometerMock>>())
-        , fan_(std::make_unique<NiceMock<FanMock>>())
-        , sut_(*thermometer_, *fan_, TARGET_TEMPERATURE, TOLERANCE)
+        : SutWithDependantMocks()
     { }
-
-  protected:
-    std::unique_ptr<ThermometerMock> thermometer_;
-    std::unique_ptr<FanMock> fan_;
-    Controller sut_;
 };
 
 double tempsWihtinThreshold[] = {
@@ -86,9 +84,6 @@ INSTANTIATE_TEST_SUITE_P(ControllerShould,
                          ForTemperatureValuesBelowToleranceRange,
                          ValuesIn(tempsBelowTemperatureThreshold));
 
-// INSTANTIATE_TEST_SUITE_P(dupa,
-//                          ControllerShould,
-//                          ValuesIn(tempsBelowTemperatureThreshold));
 // TODO: REMOVE
 /*  TESTS to do
 
