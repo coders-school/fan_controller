@@ -11,7 +11,7 @@ Controller::Controller(const IThermometer& thermometer,
     : thermometer_(thermometer)
     , fan_(fan)
     , fanStartTemperature_(targetTemperature - tolerance)
-    , increaseSpeedTemperature_(targetTemperature + tolerance)
+    , nominalFanSpeedUpperThreshold_(targetTemperature + tolerance)
 { }
 
 void Controller::updateRpm()
@@ -19,5 +19,8 @@ void Controller::updateRpm()
     const double tempRead = thermometer_.getTemperature();
     if (tempRead < fanStartTemperature_) {
         fan_.disable();
+    }
+    else if (tempRead >= fanStartTemperature_ && tempRead <= nominalFanSpeedUpperThreshold_) {
+        fan_.enable();
     }
 }

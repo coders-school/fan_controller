@@ -22,5 +22,5 @@ class Controller
     const IThermometer& thermometer_;
     IFan& fan_;
     const double fanStartTemperature_;
-    const double increaseSpeedTemperature_;
+    const double nominalFanSpeedUpperThreshold_;
 };
