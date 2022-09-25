@@ -1,16 +1,23 @@
+// TODO: VERIFY includes
 #include "Controller.hpp"
 
+#include "IFan.hpp"
 #include "IThermometer.hpp"
 
 Controller::Controller(const IThermometer& thermometer,
-                       Fan fan,
-                       double,
-                       double,
-                       std::shared_ptr<LcdDisplay> display)
+                       IFan& fan,
+                       double targetTemperature,
+                       double tolerance)
+    : thermometer_(thermometer)
+    , fan_(fan)
+    , fanStartTemperature_(targetTemperature - tolerance)
+    , increaseSpeedTemperature_(targetTemperature + tolerance)
 { }
 
 void Controller::updateRpm()
-{ }
-
-void Controller::displayInfo()
-{ }
+{
+    const double tempRead = thermometer_.getTemperature();
+    if (tempRead < fanStartTemperature_) {
+        fan_.disable();
+    }
+}

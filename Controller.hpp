@@ -12,10 +12,15 @@ class Controller
 {
   public:
     Controller(const IThermometer& thermometer,
-               Fan fan,
-               double,
-               double,
-               std::shared_ptr<LcdDisplay> display);
+               IFan& fan,
+               double targetTemperature,
+               double tolerance);
+    virtual ~Controller() = default;
     void updateRpm();
-    void displayInfo();
+
+  protected:
+    const IThermometer& thermometer_;
+    IFan& fan_;
+    const double fanStartTemperature_;
+    const double increaseSpeedTemperature_;
 };
