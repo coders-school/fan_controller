@@ -68,4 +68,12 @@ TEST_F(ControllerShould, disableFanForTemperatureEqualToZero)
     sut_.updateRpm();
 }
 
+TEST_F(ControllerShould, disableFanForTemperatureSlightlyBellowStartTreshold)
+{
+    EXPECT_CALL(*thermometer_, getTemperature()).WillOnce(Return(fanStartTemperature_ - 0.001));
+    EXPECT_CALL(*fan_, disable());
+
+    sut_.updateRpm();
+}
+
 }   // namespace controller_ut
