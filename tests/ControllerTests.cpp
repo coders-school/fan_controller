@@ -44,8 +44,8 @@ ControllerShould::ControllerShould()
 // TODO: REMOVE
 /*  TESTS to do
 
-- set start fan speed to 1000 when the temperature is within tolerance
 - disable the fan when temperature is below target temparature - tolerance
+- set start fan speed to 1000 when the temperature is within tolerance
 - increase the fan speed 1 rpm for 0.001 degree above temperature + tolerance
 - do not increase fan speed even when max allowed fan speed reached;
 
@@ -58,10 +58,14 @@ TEST_F(ControllerShould, disableFanForTemperatureBelowZero)
     EXPECT_CALL(*fan_, disable());
 
     sut_.updateRpm();
-    //     .Will;
-    // EXPECT_CALL(fan_, updateTemperature()).WillOnce(Return);
-    // const double zeroDegreesTemp { 0.0 };
-    // const double tempSlightlyBelowStart { fanStartTemperature_ - 0.001 };
+}
+
+TEST_F(ControllerShould, disableFanForTemperatureEqualToZero)
+{
+    EXPECT_CALL(*thermometer_, getTemperature()).WillOnce(Return(0));
+    EXPECT_CALL(*fan_, disable());
+
+    sut_.updateRpm();
 }
 
 }   // namespace controller_ut
