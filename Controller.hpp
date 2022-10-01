@@ -1,11 +1,8 @@
 #pragma once
-// TODO: REMOVE
-#include "Fan.hpp"
-// TODO: REMOVE
-// #include "SlowThermometer/SlowThermometer.hpp"
 
 #include <memory>
 
+class IFan;
 class LcdDisplay;
 class IThermometer;
 class Controller
@@ -16,11 +13,19 @@ class Controller
                double targetTemperature,
                double tolerance);
     virtual ~Controller() = default;
-    void updateRpm();
+    void updateRpm() const;
 
-  protected:
+  private:
+    int calcDesiredFanSpeed(double temperature) const;
+    void disableFan(int currentRpm) const;
+    void setFanToNominalSpeed(int currentRpm) const;
+    void setFanToIncreasedSpeed(int currentRpm, double temperature) const;
+
     const IThermometer& thermometer_;
     IFan& fan_;
     const double fanStartTemperature_;
     const double nominalFanSpeedUpperThreshold_;
+    const int fanNominalSpeed_ = 1000;
+    const int fanMaxSpeed_ = 3000;
+    const double tempDiffForOneRpm_ = 0.001;
 };
