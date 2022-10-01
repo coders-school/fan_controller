@@ -11,7 +11,7 @@ class Fan : public IFan
     bool enable() override;
 
   private:
-    static constexpr double lowerRpmLimit = 1000;
+    static constexpr double nominalRpmLimit = 1000;
     static constexpr double higherRpmLimit = 3000;
     int rpm_ = 0;
 };
