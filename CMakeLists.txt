@@ -13,7 +13,9 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-# Now simply link against gtest or gtest_main as needed. Eg
+include(GoogleTest)
+
+enable_testing()
 
 project(FanController)
 
@@ -22,12 +24,11 @@ include_directories(.)
 add_library(SlowThermometer-lib SlowThermometer/SlowThermometer.cpp)
 
 set(SRC_LIST
-    Controller.hpp
     Controller.cpp
-    Fan.hpp
+    ControllerWithDisplay.cpp
     Fan.cpp
-    LcdDisplay.hpp
     LcdDisplay.cpp
+    ProductionThermometer.cpp
 )
 
 add_library(${PROJECT_NAME}-lib ${SRC_LIST})
@@ -39,7 +40,22 @@ set(TEST_SRC_LIST
     tests/ControllerTests.cpp
 )
 
-add_executable(${PROJECT_NAME}-ut ${TEST_SRC_LIST})
+# unit test with gtest
+add_executable(Controller-ut
+               tests/ControllerTests.cpp
+               tests/ControllerWithDisplayTests.cpp
+              )
+target_link_libraries(Controller-ut
+                      ${PROJECT_NAME}-lib
+                      gtest_main
+                      gmock_main
+                      pthread)
 
-include(GoogleTest)
-gtest_discover_tests(${PROJECT_NAME}-ut)
+#  unit-tests with catch
+add_executable(Fan-ut tests/FanTests.cpp)
+
+target_link_libraries(Fan-ut
+                      ${PROJECT_NAME}-lib
+                      pthread)
+
+gtest_discover_tests(Controller-ut)

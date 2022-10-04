@@ -1,39 +1,37 @@
 #include "Fan.hpp"
-#include <stdexcept>
+
 #include <cmath>
+#include <stdexcept>
 
-Fan::Fan() {
-    rpm = 0;
-}
-
-Fan::Fan(Fan&& other) : rpm(std::move(other.rpm)) {}
-
-Fan::Fan(const Fan& other) : rpm(other.rpm) {}
-
-void Fan::setSpeed(int newRpm) {
-    if ((newRpm < 1000 and newRpm != 0) or newRpm > 3000) {
+void Fan::setSpeed(int newRpm)
+{
+    if ((newRpm < nominalRpmLimit and newRpm != 0) or newRpm > higherRpmLimit) {
         throw std::invalid_argument("Invalid speed");
     }
-    auto difference = std::abs(newRpm - rpm);
+    auto difference = std::abs(newRpm - rpm_);
     for (auto i = 0; i < difference; ++i) {
-        if (newRpm - rpm > 0) {
-            rpm++;
-        } else {
-            rpm--;
+        if (newRpm - rpm_ > 0) {
+            rpm_++;
+        }
+        else {
+            rpm_--;
         }
     }
 }
 
-int Fan::getSpeed() {
-    return rpm;
+int Fan::getSpeed() const
+{
+    return rpm_;
 }
 
-bool Fan::disable() {
-    rpm = 0;
+bool Fan::disable()
+{
+    rpm_ = 0;
     return true;
 }
 
-bool Fan::enable() {
-    rpm = 1000;
+bool Fan::enable()
+{
+    rpm_ = nominalRpmLimit;
     return true;
 }

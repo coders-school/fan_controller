@@ -1,15 +1,17 @@
 #pragma once
 
-class Fan {
-    int rpm = 0;
+#include "IFan.hpp"
 
-public:
-    Fan();
-    Fan(const Fan&);
-    Fan(Fan&&);
+class Fan : public IFan
+{
+  public:
+    void setSpeed(int newRpm) override;
+    int getSpeed() const override;
+    bool disable() override;
+    bool enable() override;
 
-    void setSpeed(int newRpm);
-    int getSpeed();
-    bool disable();
-    bool enable();
+  private:
+    static constexpr double nominalRpmLimit = 1000;
+    static constexpr double higherRpmLimit = 3000;
+    int rpm_ = 0;
 };
