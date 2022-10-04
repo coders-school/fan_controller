@@ -24,11 +24,9 @@ include_directories(.)
 add_library(SlowThermometer-lib SlowThermometer/SlowThermometer.cpp)
 
 set(SRC_LIST
-    Controller.hpp
     Controller.cpp
-    Fan.hpp
+    ControllerWithDisplay.cpp
     Fan.cpp
-    LcdDisplay.hpp
     LcdDisplay.cpp
     ProductionThermometer.cpp
 )
@@ -43,28 +41,21 @@ set(TEST_SRC_LIST
 )
 
 # unit test with gtest
-add_executable(Controller-ut tests/ControllerTests.cpp)
-# # //TODO: VERIFY
-# target_include_directories(${PROJECT_NAME}-ut
-#                            PRIVATE
-#                            ${CMAKE_SOURCE_DIR})
+add_executable(Controller-ut
+               tests/ControllerTests.cpp
+               tests/ControllerWithDisplayTests.cpp
+              )
 target_link_libraries(Controller-ut
                       ${PROJECT_NAME}-lib
-                      SlowThermometer-lib # //TODO: VERIFY
                       gtest_main
                       gmock_main
                       pthread)
 
 #  unit-tests with catch
 add_executable(Fan-ut tests/FanTests.cpp)
-# //TODO: VERIFY
-# target_include_directories(${PROJECT_NAME}-ut
-#                            PRIVATE
-#                            ${CMAKE_SOURCE_DIR})
+
 target_link_libraries(Fan-ut
                       ${PROJECT_NAME}-lib
-                      SlowThermometer-lib # //TODO: VERIFY
                       pthread)
-# // TODO: REMOVE
-# include(GoogleTest)
+
 gtest_discover_tests(Controller-ut)

@@ -4,12 +4,11 @@
 
 #include "gtest/gtest.h"
 
-namespace controller_ut {
+namespace {
 
 using testing::_;
 using testing::NiceMock;
 using testing::Return;
-using testing::Test;
 using testing::TestWithParam;
 using testing::ValuesIn;
 
@@ -24,21 +23,21 @@ static constexpr double TEMP_DIFF_FOR_ONE_RPM = 0.001;
 int calcDesiredRpmSpeedForTemp(double temperature)
 {
     double tempDifference = (temperature - MAX_TEMP_BEFORE_SPEED_INCREASE);
-    int speedIncrease { 0 };
+    int rpmIncrease { 0 };
     if (tempDifference > 0.0) {
-        speedIncrease = static_cast<int>(std::round(tempDifference / TEMP_DIFF_FOR_ONE_RPM));
+        rpmIncrease = static_cast<int>(std::round(tempDifference / TEMP_DIFF_FOR_ONE_RPM));
     }
 
-    int final_speed = FAN_NOMINAL_SPEED + speedIncrease;
+    int final_speed = FAN_NOMINAL_SPEED + rpmIncrease;
 
-    return final_speed > 3000 ? 3000
-                              : final_speed;
+    return final_speed > FAN_MAX_SPEED ? FAN_MAX_SPEED
+                                       : final_speed;
 }
 
-class SutWithDependantMocks
+class ControllerWithUsedMocks
 {
   protected:
-    SutWithDependantMocks()
+    ControllerWithUsedMocks()
         : thermometer_(std::make_unique<NiceMock<ThermometerMock>>())
         , fan_(std::make_unique<NiceMock<FanMock>>())
         , sut_(*thermometer_, *fan_, TARGET_TEMPERATURE, TOLERANCE)
@@ -50,38 +49,38 @@ class SutWithDependantMocks
 };
 
 class ForTemperatureValuesWithinToleranceRange : public TestWithParam<double>,
-                                                 public SutWithDependantMocks
+                                                 public ControllerWithUsedMocks
 {
   public:
     ForTemperatureValuesWithinToleranceRange()
-        : SutWithDependantMocks()
+        : ControllerWithUsedMocks()
     { }
 };
 
 class ForTemperatureValuesBelowToleranceRange : public TestWithParam<double>,
-                                                public SutWithDependantMocks
+                                                public ControllerWithUsedMocks
 {
   public:
     ForTemperatureValuesBelowToleranceRange()
-        : SutWithDependantMocks()
+        : ControllerWithUsedMocks()
     { }
 };
 
 class ForTemperatureValuesAboveToleranceRange : public TestWithParam<double>,
-                                                public SutWithDependantMocks
+                                                public ControllerWithUsedMocks
 {
   public:
     ForTemperatureValuesAboveToleranceRange()
-        : SutWithDependantMocks()
+        : ControllerWithUsedMocks()
     { }
 };
 
 class ForTemperatureValuesAboveMaximumFanSpeed : public TestWithParam<double>,
-                                                 public SutWithDependantMocks
+                                                 public ControllerWithUsedMocks
 {
   public:
     ForTemperatureValuesAboveMaximumFanSpeed()
-        : SutWithDependantMocks()
+        : ControllerWithUsedMocks()
     { }
 };
 
@@ -287,4 +286,4 @@ TEST_P(ForTemperatureValuesAboveMaximumFanSpeed, shouldSetFanSpeedToMaximum)
     sut_.updateRpm();
 }
 
-}   // namespace controller_ut
+}   // namespace

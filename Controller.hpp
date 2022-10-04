@@ -3,7 +3,6 @@
 #include <memory>
 
 class IFan;
-class LcdDisplay;
 class IThermometer;
 class Controller
 {
@@ -15,7 +14,7 @@ class Controller
     virtual ~Controller() = default;
     void updateRpm() const;
 
-  private:
+  protected:
     int calcDesiredFanSpeed(double temperature) const;
     void disableFan(int currentRpm) const;
     void setFanToNominalSpeed(int currentRpm) const;

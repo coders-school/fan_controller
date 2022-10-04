@@ -1,4 +1,3 @@
-// TODO: VERIFY includes
 #include "Controller.hpp"
 
 #include "IFan.hpp"

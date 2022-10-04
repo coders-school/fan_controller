@@ -1,8 +1,9 @@
 #pragma once
-#include <string>
 
-class LcdDisplay
+#include "ILcdDisplay.hpp"
+
+class LcdDisplay : public ILcdDisplay
 {
   public:
-    void print(std::string message) const;
+    void print(const std::string& message) const override;
 };
